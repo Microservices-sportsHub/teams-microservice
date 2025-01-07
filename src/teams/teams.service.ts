@@ -103,6 +103,9 @@ export class TeamsService extends PrismaClient implements OnModuleInit {
 
   async update(id: string, updateTeamDto: UpdateTeamDto) {
     
+    const {id:__, ...data}=updateTeamDto; //destructuración de id y el resto de los datos esto es para que no entre en conflicto con el id que llega adicional
+    console.log(data);
+
     const teamsExist = await this.team.findFirst({
       where: { id, isDeleted: false },
     });
@@ -114,10 +117,10 @@ export class TeamsService extends PrismaClient implements OnModuleInit {
     const team = this.team.update({
       where: {id},
       data: {
-        ...updateTeamDto,
+        ...data,
         members: {
           deleteMany: {},
-          create: updateTeamDto.members,
+          create: data.members,
         },
       },
     });
